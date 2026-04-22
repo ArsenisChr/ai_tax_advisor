@@ -1,0 +1,29 @@
+.page {
+  padding-block: var(--space-16);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+}
+
+.code {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.03em;
+}
+
+.title {
+  font-size: 1.75rem;
+}
+
+.text {
+  color: var(--color-text-muted);
+  max-width: 40ch;
+}
+
+.link {
+  margin-top: var(--space-2);
+  font-weight: 500;
+}
