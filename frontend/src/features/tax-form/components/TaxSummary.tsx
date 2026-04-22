@@ -66,8 +66,8 @@ export function TaxSummary({ data, savedAt }: TaxSummaryProps) {
         </div>
         <p className={styles.subtitle}>
           Your data is kept for this session and will be available across page
-          reloads. AI-powered recommendations tailored to the Greek tax system
-          will be generated once the backend is connected in Step 2.
+          reloads. AI-powered insights tailored to the Greek tax system
+          will be generated.
         </p>
       </header>
 
