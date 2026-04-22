@@ -1,0 +1,81 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.required {
+  color: var(--color-error);
+}
+
+.control :global(input),
+.control :global(select),
+.control :global(textarea) {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.control :global(textarea) {
+  resize: vertical;
+  min-height: 96px;
+  line-height: 1.5;
+}
+
+.control :global(input)::placeholder,
+.control :global(textarea)::placeholder {
+  color: var(--color-text-subtle);
+}
+
+.control :global(input:hover),
+.control :global(select:hover),
+.control :global(textarea:hover) {
+  border-color: var(--color-primary);
+}
+
+.control :global(input:focus-visible),
+.control :global(select:focus-visible),
+.control :global(textarea:focus-visible) {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.control[data-has-error='true'] :global(input),
+.control[data-has-error='true'] :global(select),
+.control[data-has-error='true'] :global(textarea) {
+  border-color: var(--color-error);
+}
+
+.control[data-has-error='true'] :global(input:focus-visible),
+.control[data-has-error='true'] :global(select:focus-visible),
+.control[data-has-error='true'] :global(textarea:focus-visible) {
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--color-error) 30%, transparent);
+}
+
+.hint {
+  font-size: 0.825rem;
+  color: var(--color-text-subtle);
+}
+
+.error {
+  font-size: 0.825rem;
+  color: var(--color-error);
+  font-weight: 500;
+}
