@@ -10,7 +10,7 @@ dependents) via a responsive UI.
 **Frontend**
 - React 19 + TypeScript — UI + static types
 - Vite — build tool & dev server
-- React Router v6 — SPA routing
+- React Router v7 — SPA routing
 - React Hook Form + Zod — forms & validation
 - CSS Modules — scoped styles, dark mode, responsive
 
