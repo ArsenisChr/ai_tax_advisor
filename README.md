@@ -8,10 +8,11 @@ dependents) via a responsive UI.
 ## Tech Stack
 
 **Frontend**
-- React 19 + TypeScript + Vite — strong typing, fast HMR
-- React Router v6 — de-facto SPA routing
-- React Hook Form + Zod — performant, type-safe forms
-- Modern CSS + CSS Modules — dark mode, responsive, no framework lock-in
+- React 19 + TypeScript — UI + static types
+- Vite — build tool & dev server
+- React Router v6 — SPA routing
+- React Hook Form + Zod — forms & validation
+- CSS Modules — scoped styles, dark mode, responsive
 
 **Tooling & Infrastructure**
 - `npm` (frontend) · `uv` (backend) — fast, modern package managers
