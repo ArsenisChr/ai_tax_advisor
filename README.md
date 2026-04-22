@@ -96,7 +96,7 @@ The app will be available at **http://localhost:5173**.
 
 ### Features
 
-- **Responsive layout** with sticky header, primary navigation, skip-to-content link, and footer with disclaimer
+- **Responsive layout** with sticky header, primary navigation, and footer with disclaimer
 - **Home page** with hero, CTAs, and a features grid
 - **Tax input form** with 6 fields: full name, filing status, annual income, deductible expenses, dependents, and optional notes
 - **Client-side validation** with a shared Zod schema (errors inline with ARIA attributes)
@@ -106,7 +106,6 @@ The app will be available at **http://localhost:5173**.
 ### Accessibility
 
 - Semantic landmarks (`<header>`, `<main>`, `<footer>`, `<nav>`)
-- Skip link for keyboard users
 - Associated `<label>`, hint, and error messages for every input
 - `aria-invalid`, `aria-describedby`, `role="alert"`, `aria-live="polite"` where appropriate
 - Visible focus rings

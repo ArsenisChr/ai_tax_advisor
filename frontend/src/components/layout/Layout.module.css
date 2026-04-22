@@ -4,22 +4,3 @@
   flex-direction: column;
   width: 100%;
 }
-
-.skipLink {
-  position: absolute;
-  top: -40px;
-  left: var(--space-4);
-  padding: var(--space-2) var(--space-4);
-  background: var(--color-primary);
-  color: #fff;
-  border-radius: var(--radius-md);
-  font-weight: 500;
-  transition: top var(--transition-fast);
-  z-index: 100;
-}
-
-.skipLink:focus {
-  top: var(--space-2);
-  text-decoration: none;
-  color: #fff;
-}
