@@ -8,7 +8,7 @@ app = FastAPI(
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello from ai-tax-advisor FastAPI!"}
+    return {"message": "AI Tax Advisor API is running"}
 
 @app.get("/health")
 def health_check():
