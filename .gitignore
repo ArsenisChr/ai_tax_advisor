@@ -2,6 +2,9 @@
 .venv
 .env
 
+# Python-generated files
+__pycache__/
+
 # Logs
 logs
 *.log
