@@ -4,4 +4,6 @@ version = "0.1.0"
 description = "AI-powered web application that provides intelligent tax advice through a modern full-stack architecture and integrated AI services."
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "fastapi[standard]>=0.136.1",
+]

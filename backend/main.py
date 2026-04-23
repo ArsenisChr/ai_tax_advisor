@@ -1,6 +1,15 @@
-def main():
-    print("Hello from ai-tax-advisor!")
+from fastapi import FastAPI
 
+app = FastAPI(
+    title="AI Tax Advisor API",
+    description="REST API for the AI Tax Advisor application",
+    version="0.1.0"
+)
 
-if __name__ == "__main__":
-    main()
+@app.get("/")
+def read_root():
+    return {"message": "Hello from ai-tax-advisor FastAPI!"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
