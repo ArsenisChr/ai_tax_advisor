@@ -7,7 +7,7 @@ Never read env vars directly with `os.getenv(...)` — always go through this mo
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 Environment = Literal["local", "test", "staging", "production"]
@@ -35,6 +35,9 @@ class Settings(BaseSettings):
 
     api_prefix: str = "/api"
     cors_origins: list[str] = Field(default_factory=list)
+
+    openai_api_key: SecretStr
+    openai_model: str = "gpt-4.1"
 
 
 @lru_cache(maxsize=1)

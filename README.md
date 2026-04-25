@@ -5,6 +5,13 @@ AI-powered web application that provides intelligent, personalized tax guidance 
 The app collects basic tax information (income, expenses, filing status,
 dependents) via a responsive UI.
 
+**AI in the app:** after you submit the form, the **FastAPI** service builds a
+structured prompt, calls the **OpenAI** API (Responses) server-side, and returns
+the model text in `message`. The **React** client renders that text as
+**Markdown** (GFM) in the summary, with sanitization. No API key ever ships to
+the browser; configure the backend with `APP_OPENAI_API_KEY` (and optional
+`APP_OPENAI_MODEL`). See `backend/.env.example`.
+
 ## Tech Stack
 
 **Frontend**
@@ -12,11 +19,13 @@ dependents) via a responsive UI.
 - Vite — build tool & dev server
 - React Router v7 — SPA routing
 - React Hook Form + Zod — forms & validation
+- `react-markdown` + `remark-gfm` + `rehype-sanitize` — AI reply as safe Markdown
 - CSS Modules — scoped styles, dark mode, responsive
 
 **Backend**
 - FastAPI — REST API
 - Pydantic v2 — request/response schemas + validation
+- OpenAI Python SDK — `POST` flow calls the model from `app/integrations/`
 - `asgi-correlation-id` + `structlog` — request tracing + structured logs
 - Pytest — API tests
 
@@ -48,8 +57,9 @@ ai_tax_advisor/
 │   ├── app/
 │   │   ├── api/               # Routers (health, tax)
 │   │   ├── core/              # Settings + logging
+│   │   ├── integrations/      # e.g. OpenAI client
 │   │   ├── schemas/           # Pydantic DTOs
-│   │   └── services/          # Business logic layer
+│   │   └── services/          # Tax advice + prompt templates
 │   ├── tests/                 # Integration tests
 │   └── pyproject.toml
 ├── local_data/                # Gitignored scratch space
@@ -94,11 +104,14 @@ The app will be available at **http://localhost:5173**.
 ### Backend
 ```bash
 cd backend
+cp .env.example .env   # set APP_OPENAI_API_KEY (and model if you like)
 uv sync --all-groups
 uv run fastapi dev app/main.py
 ```
 
 API docs (Swagger): **http://localhost:8000/docs**
+
+Without a valid OpenAI key, tax advice calls will return **502** from `/api/tax/advice` because the app calls the real API.
 
 ---
 
@@ -142,8 +155,8 @@ Example responses:
 
 ### Tax Advice
 - `POST /api/tax/advice`
-- Accepts camelCase payload from the frontend
-- Returns a simple acknowledgement (OpenAI integration comes next)
+- Accepts camelCase payload from the frontend, validates, then calls OpenAI; 
+- Returns the model’s guidance in `message` (or 502 if the AI call fails)
 
 Request body:
 ```json
@@ -160,11 +173,11 @@ Request body:
 }
 ```
 
-Response body:
+Response body (shape; `message` is natural-language Markdown from the model):
 ```json
 {
   "status": "received",
-  "message": "Your tax information was received successfully.",
+  "message": "## General guidance\n\n- …\n- …",
   "receivedAt": "2026-04-24T17:22:27.131748Z"
 }
 ```
@@ -181,6 +194,8 @@ Notes:
 - **Home page** with hero, CTAs, and a features grid
 - **Tax input form** with validated fields (identity, residency, employment, income, expenses, dependents, notes)
 - **Client-side validation** with a shared Zod schema (errors inline with ARIA attributes)
+- **AI tax guidance** on submit: the backend sends the user input to OpenAI API and receives a `message` stored in session
+- **Personalized Advice** section with Markdown rendering
 - **Submission preview** rendering the entered data and an estimated taxable base
 - **404 Not Found** page for unknown routes
 

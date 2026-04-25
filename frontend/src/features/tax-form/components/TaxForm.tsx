@@ -23,6 +23,8 @@ import styles from './TaxForm.module.css'
 type SavedSubmission = {
   data: TaxFormValues
   savedAt: string
+  /** Present after a successful submit that returned AI text. */
+  adviceMessage?: string
 }
 
 export function TaxForm() {
@@ -47,7 +49,11 @@ export function TaxForm() {
     setSubmitError(null)
     try {
       const response = await submitTaxAdvice(values)
-      setSaved({ data: values, savedAt: response.receivedAt })
+      setSaved({
+        data: values,
+        savedAt: response.receivedAt,
+        adviceMessage: response.message,
+      })
     } catch (error) {
       const message =
         error instanceof ApiError
@@ -316,7 +322,13 @@ export function TaxForm() {
         </div>
       </form>
 
-      {saved && <TaxSummary data={saved.data} savedAt={saved.savedAt} />}
+      {saved && (
+        <TaxSummary
+          data={saved.data}
+          savedAt={saved.savedAt}
+          adviceMessage={saved.adviceMessage}
+        />
+      )}
     </div>
   )
 }
