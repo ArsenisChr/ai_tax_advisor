@@ -1,6 +1,5 @@
 from app.schemas.tax_form import TaxAdviceRequest
 
-
 TAX_ADVICE_SYSTEM_PROMPT = """
 You are an AI tax advisor assistant.
 
