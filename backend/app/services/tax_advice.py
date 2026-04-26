@@ -17,18 +17,7 @@ _OPENAI_502 = "OpenAI API service is not available"
 
 async def generate_tax_advice(request: TaxAdviceRequest) -> TaxAdviceResponse:
     """Process a tax form submission and return a response."""
-    log.info(
-        "tax_advice_requested",
-        age=request.age,
-        full_name=request.full_name,
-        employment_category=request.employment_category,
-        tax_residency=request.tax_residency,
-        marital_status=request.marital_status,
-        dependent_children=request.dependent_children,
-        annual_income=request.annual_income,
-        deductible_expenses=request.deductible_expenses,
-        has_notes=request.notes is not None,
-    )
+    log.info("tax_advice_requested")
 
     user_input = build_tax_user_prompt(request)
     settings = get_settings()
