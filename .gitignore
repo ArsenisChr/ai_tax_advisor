@@ -1,6 +1,11 @@
 # Environments
-.venv
+.venv/
 .env
+.env.*
+!.env.example
+
+# Python-generated files
+__pycache__/
 
 # Logs
 logs
@@ -29,3 +34,23 @@ dist-ssr
 *.sln
 *.sw?
 local_data/
+
+# Testing & coverage 
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Type checking 
+.mypy_cache/
+.pyre/
+.pytype/
+
+# Linting 
+.ruff_cache/
+
+# Packaging
+*.egg-info/
+build/

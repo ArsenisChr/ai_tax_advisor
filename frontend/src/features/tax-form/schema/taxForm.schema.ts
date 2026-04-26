@@ -5,9 +5,12 @@ export const MARITAL_STATUS = ['single', 'married'] as const
 export const EMPLOYMENT_CATEGORY = [
   'employee',
   'freelancer',
-  'pensioner',
-  'farmer',
   'rental_income',
+  'business_owner',
+  'farmer',
+  'income_earner',
+  'unemployed',
+  'retired',
   'other',
 ] as const
 
@@ -104,9 +107,12 @@ export const employmentCategoryLabels: Record<
 > = {
   employee: 'Employee (salaried)',
   freelancer: 'Freelancer / self-employed',
-  pensioner: 'Pensioner',
-  farmer: 'Farmer',
   rental_income: 'Rental income',
+  business_owner: 'Business owner',
+  farmer: 'Farmer',
+  income_earner: 'Income earner',
+  unemployed: 'Unemployed',
+  retired: 'Retired',
   other: 'Other',
 }
 

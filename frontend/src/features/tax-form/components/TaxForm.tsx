@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -12,6 +13,7 @@ import {
   type TaxFormInput,
   type TaxFormValues,
 } from '../schema/taxForm.schema'
+import { ApiError, submitTaxAdvice } from '../api/taxApi'
 import { useSessionStorage } from '@/lib/useSessionStorage'
 import { FormField } from './FormField'
 import { describedBy } from './describedBy'
@@ -21,6 +23,8 @@ import styles from './TaxForm.module.css'
 type SavedSubmission = {
   data: TaxFormValues
   savedAt: string
+  /** Present after a successful submit that returned AI text. */
+  adviceMessage?: string
 }
 
 export function TaxForm() {
@@ -28,6 +32,7 @@ export function TaxForm() {
     'tax-form-submission',
     null,
   )
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const {
     register,
@@ -41,14 +46,27 @@ export function TaxForm() {
   })
 
   const onSubmit = async (values: TaxFormValues) => {
-    // Simulated async persistence. Will be replaced with a real API call in Step 2.
-    await new Promise((resolve) => setTimeout(resolve, 300))
-    setSaved({ data: values, savedAt: new Date().toISOString() })
+    setSubmitError(null)
+    try {
+      const response = await submitTaxAdvice(values)
+      setSaved({
+        data: values,
+        savedAt: response.receivedAt,
+        adviceMessage: response.message,
+      })
+    } catch (error) {
+      const message =
+        error instanceof ApiError
+          ? error.message
+          : 'Something went wrong. Please try again.'
+      setSubmitError(message)
+    }
   }
 
   const handleReset = () => {
     reset(defaultTaxFormValues)
     setSaved(null)
+    setSubmitError(null)
   }
 
   return (
@@ -63,6 +81,12 @@ export function TaxForm() {
           Fill in the fields below. All monetary values are in euros (€).
           Required fields are marked with <span aria-hidden="true">*</span>.
         </p>
+
+        {submitError && (
+          <div className={styles.errorBanner} role="alert">
+            {submitError}
+          </div>
+        )}
 
         <div className={styles.grid}>
           <FormField
@@ -298,7 +322,13 @@ export function TaxForm() {
         </div>
       </form>
 
-      {saved && <TaxSummary data={saved.data} savedAt={saved.savedAt} />}
+      {saved && (
+        <TaxSummary
+          data={saved.data}
+          savedAt={saved.savedAt}
+          adviceMessage={saved.adviceMessage}
+        />
+      )}
     </div>
   )
 }

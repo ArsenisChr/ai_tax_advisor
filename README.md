@@ -5,6 +5,13 @@ AI-powered web application that provides intelligent, personalized tax guidance 
 The app collects basic tax information (income, expenses, filing status,
 dependents) via a responsive UI.
 
+**AI in the app:** after you submit the form, the **FastAPI** service builds a
+structured prompt, calls the **OpenAI** API (Responses) server-side, and returns
+the model text in `message`. The **React** client renders that text as
+**Markdown** (GFM) in the summary, with sanitization. No API key ever ships to
+the browser; configure the backend with `APP_OPENAI_API_KEY` (and optional
+`APP_OPENAI_MODEL`). See `backend/.env.example`.
+
 ## Tech Stack
 
 **Frontend**
@@ -12,7 +19,15 @@ dependents) via a responsive UI.
 - Vite — build tool & dev server
 - React Router v7 — SPA routing
 - React Hook Form + Zod — forms & validation
+- `react-markdown` + `remark-gfm` + `rehype-sanitize` — AI reply as safe Markdown
 - CSS Modules — scoped styles, dark mode, responsive
+
+**Backend**
+- FastAPI — REST API
+- Pydantic v2 — request/response schemas + validation
+- OpenAI Python SDK — `POST` flow calls the model from `app/integrations/`
+- `asgi-correlation-id` + `structlog` — request tracing + structured logs
+- Pytest — API tests
 
 **Tooling & Infrastructure**
 - `npm` (frontend) · `uv` (backend) — fast, modern package managers
@@ -38,8 +53,14 @@ ai_tax_advisor/
 │   ├── index.html
 │   ├── vite.config.ts         # Includes '@/*' path alias
 │   └── package.json
-├── backend/                   # FastAPI application (scaffold)
-│   ├── main.py
+├── backend/                   # FastAPI backend
+│   ├── app/
+│   │   ├── api/               # Routers (health, tax)
+│   │   ├── core/              # Settings + logging
+│   │   ├── integrations/      # e.g. OpenAI client
+│   │   ├── schemas/           # Pydantic DTOs
+│   │   └── services/          # Tax advice + prompt templates
+│   ├── tests/                 # Integration tests
 │   └── pyproject.toml
 ├── local_data/                # Gitignored scratch space
 ├── .gitignore
@@ -56,7 +77,7 @@ ai_tax_advisor/
 - **Node.js ≥ 20** (tested with v24) — recommended via [`nvm`](https://github.com/nvm-sh/nvm)
 - **npm ≥ 10** (bundled with Node.js)
 - **Python ≥ 3.13** — recommended via [`pyenv`](https://github.com/pyenv/pyenv)
-- **`uv`** — `curl -LsSf https://astral.sh/uv/install.sh | sh` *(planned for Step 2)*
+- **`uv`** — `curl -LsSf https://astral.sh/uv/install.sh | sh`
 
 Verify your setup:
 
@@ -64,12 +85,14 @@ Verify your setup:
 node --version
 npm --version
 python3 --version
+uv --version
 ```
 
 ---
 
 ## Getting Started
 
+### Frontend
 ```bash
 cd frontend
 npm install
@@ -77,6 +100,18 @@ npm run dev
 ```
 
 The app will be available at **http://localhost:5173**.
+
+### Backend
+```bash
+cd backend
+cp .env.example .env   # set APP_OPENAI_API_KEY (and model if you like)
+uv sync --all-groups
+uv run fastapi dev app/main.py
+```
+
+API docs (Swagger): **http://localhost:8000/docs**
+
+Without a valid OpenAI key, tax advice calls will return **502** from `/api/tax/advice` because the app calls the real API.
 
 ---
 
@@ -91,7 +126,65 @@ The app will be available at **http://localhost:5173**.
 | `npm run preview` | Preview the production build locally                       |
 | `npm run lint`    | Run ESLint across the codebase                             |
 
+### Backend (`cd backend`)
+
+| Command                     | Description                              |
+| --------------------------- | ---------------------------------------- |
+| `uv run fastapi dev app/main.py` | Start FastAPI dev server           |
+| `uv run pytest -v`          | Run test suite                           |
+| `uv run ruff check .`       | Run lint checks                          |
+| `uv run mypy app tests`     | Run static type checks                   |
+
 ---
+
+## API Endpoints
+
+Base URL (local): `http://localhost:8000`
+
+### Health
+- `GET /health` → liveness probe
+- `GET /ready` → readiness probe
+
+Example responses:
+```json
+{ "status": "ok" }
+```
+```json
+{ "status": "ready" }
+```
+
+### Tax Advice
+- `POST /api/tax/advice`
+- Accepts camelCase payload from the frontend, validates, then calls OpenAI; 
+- Returns the model’s guidance in `message` (or 502 if the AI call fails)
+
+Request body:
+```json
+{
+  "fullName": "Maria Papadopoulou",
+  "age": 42,
+  "taxResidency": "GR",
+  "maritalStatus": "single",
+  "employmentCategory": "employee",
+  "annualIncome": 45000,
+  "deductibleExpenses": 8000,
+  "dependentChildren": 1,
+  "notes": "Optional notes"
+}
+```
+
+Response body (shape; `message` is natural-language Markdown from the model):
+```json
+{
+  "status": "received",
+  "message": "## General guidance\n\n- …\n- …",
+  "receivedAt": "2026-04-24T17:22:27.131748Z"
+}
+```
+
+Notes:
+- Backend fields are snake_case internally and exposed as camelCase via Pydantic aliases.
+- Empty/whitespace `notes` values are normalized to `null`.
 
 ## What's Implemented
 
@@ -99,8 +192,10 @@ The app will be available at **http://localhost:5173**.
 
 - **Responsive layout** with sticky header, primary navigation, and footer with disclaimer
 - **Home page** with hero, CTAs, and a features grid
-- **Tax input form** with 6 fields: full name, filing status, annual income, deductible expenses, dependents, and optional notes
+- **Tax input form** with validated fields (identity, residency, employment, income, expenses, dependents, notes)
 - **Client-side validation** with a shared Zod schema (errors inline with ARIA attributes)
+- **AI tax guidance** on submit: the backend sends the user input to OpenAI API and receives a `message` stored in session
+- **Personalized Advice** section with Markdown rendering
 - **Submission preview** rendering the entered data and an estimated taxable base
 - **404 Not Found** page for unknown routes
 
