@@ -346,7 +346,7 @@ Notes:
 
 ### Responsive Design
 
-- Mobile-first layout with breakpoints at 480 / 640 / 1024 px
+- Mobile-first layout with breakpoints at 480 / 640 px
 - Fluid typography using CSS `clamp()`
 - Two-column form grid that collapses to a single column on narrow viewports
 
