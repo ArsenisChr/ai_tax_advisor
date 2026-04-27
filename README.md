@@ -38,6 +38,9 @@ the browser; configure the backend with `APP_OPENAI_API_KEY` (and optional
 
 ```
 ai_tax_advisor/
+├── .github/
+│   └── workflows/
+│       └── ci.yml               # GitHub Actions CI/CD pipeline
 ├── frontend/                  # React + Vite + TypeScript client
 │   ├── public/                # Static assets
 │   ├── src/
@@ -62,6 +65,7 @@ ai_tax_advisor/
 │   │   └── services/          # Tax advice + prompt templates
 │   ├── tests/                 # Integration tests
 │   └── pyproject.toml
+├── docker-compose.yml         # Local multi-container orchestration
 ├── local_data/                # Gitignored scratch space
 ├── .gitignore
 └── README.md                  # ← you are here
@@ -78,6 +82,7 @@ ai_tax_advisor/
 - **npm ≥ 10** (bundled with Node.js)
 - **Python ≥ 3.13** — recommended via [`pyenv`](https://github.com/pyenv/pyenv)
 - **`uv`** — `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- **Docker Engine + Docker Compose** — required for containerized local run
 
 Verify your setup:
 
@@ -86,6 +91,8 @@ node --version
 npm --version
 python3 --version
 uv --version
+docker --version
+docker compose version
 ```
 
 ---
@@ -196,6 +203,7 @@ Continuous Integration is configured in `.github/workflows/ci.yml`.
    - Sets CI env values:
      - `APP_OPENAI_API_KEY=test-key`
      - `APP_APP_ENV=test`
+   - `APP_OPENAI_API_KEY` is a dummy CI value used to satisfy settings validation during tests
    - Executes:
      - `uv sync --all-groups`
      - `uv run ruff check .`
