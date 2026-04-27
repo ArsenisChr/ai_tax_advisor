@@ -115,6 +115,63 @@ Without a valid OpenAI key, tax advice calls will return **502** from `/api/tax/
 
 ---
 
+## Run with Docker
+
+The repository includes Docker setup for both services:
+- `backend/Dockerfile` (FastAPI on port `8000`)
+- `frontend/Dockerfile` (Vite dev server on port `5173`)
+- `docker-compose.yml` (orchestrates frontend + backend)
+
+### 1) Prepare backend env file
+`docker-compose.yml` loads backend environment variables from `backend/.env`.
+
+```bash
+cd backend
+cp .env.example .env   # set APP_OPENAI_API_KEY (and optional APP_OPENAI_MODEL)
+cd ..
+```
+
+### 2) Build images
+From the repository root:
+
+```bash
+docker compose build
+```
+
+### 3) Start containers
+
+```bash
+docker compose up
+```
+
+Or run in detached mode:
+
+```bash
+docker compose up -d
+```
+
+Services:
+- Frontend: **http://localhost:5173**
+- Backend API: **http://localhost:8000**
+- Swagger docs: **http://localhost:8000/docs**
+
+### Useful Docker commands
+
+```bash
+docker compose logs -f
+docker compose logs -f backend
+docker compose logs -f frontend
+docker compose down
+```
+
+To rebuild after changes:
+
+```bash
+docker compose up --build
+```
+
+---
+
 ## Available Scripts
 
 ### Frontend (`cd frontend`)
