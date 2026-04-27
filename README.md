@@ -172,6 +172,56 @@ docker compose up --build
 
 ---
 
+## CI/CD Pipeline (GitHub Actions)
+
+Continuous Integration is configured in `.github/workflows/ci.yml`.
+
+### When it runs
+- On every `push` to `main`
+- On every `pull_request` targeting `main`
+
+### Pipeline jobs
+
+1. `frontend`
+   - Runs in `frontend/`
+   - Uses Node.js `24`
+   - Executes:
+     - `npm ci`
+     - `npm run lint`
+     - `npm run build`
+
+2. `backend`
+   - Runs in `backend/`
+   - Uses Python `3.13` + `uv`
+   - Sets CI env values:
+     - `APP_OPENAI_API_KEY=test-key`
+     - `APP_APP_ENV=test`
+   - Executes:
+     - `uv sync --all-groups`
+     - `uv run ruff check .`
+     - `uv run mypy app tests`
+     - `uv run pytest -v`
+
+3. `docker`
+   - Runs only if `frontend` and `backend` jobs pass
+   - Validates container builds with:
+     - `docker compose build`
+
+4. `deploy`
+   - Runs only if `docker` passes
+   - Runs only for `push` events on `main`
+   - Currently a placeholder step (`echo ...`) until a production target is configured
+
+### CI flow summary
+- Code pushed or PR opened to `main`
+- Frontend and backend quality checks run
+- If checks pass, Docker images are built
+- If Docker build passes and event is `push` on `main`, deploy job is triggered
+
+You can inspect run history and logs in the repository's **Actions** tab on GitHub.
+
+---
+
 ## Available Scripts
 
 ### Frontend (`cd frontend`)
