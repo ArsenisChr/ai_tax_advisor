@@ -37,7 +37,7 @@ Application presentation (PDF): [![AI Tax Advisor Presentation](assets/preview.p
 
 **Tooling & Infrastructure**
 
-- `npm` (frontend) · `uv` (backend) — fast, modern package managers
+- `npm` (frontend) · `uv` (backend) — package managers
 
 ---
 
@@ -47,7 +47,7 @@ Application presentation (PDF): [![AI Tax Advisor Presentation](assets/preview.p
 ai_tax_advisor/
 ├── .github/
 │   └── workflows/
-│       └── ci.yml               # GitHub Actions CI/CD pipeline
+│       └── ci.yml               # GitHub Actions CI pipeline
 ├── frontend/                  # React + Vite + TypeScript client
 │   ├── public/                # Static assets
 │   ├── src/
@@ -73,7 +73,6 @@ ai_tax_advisor/
 │   ├── tests/                 # Integration tests
 │   └── pyproject.toml
 ├── docker-compose.yml         # Local multi-container orchestration
-├── local_data/                # Gitignored scratch space
 ├── .gitignore
 └── README.md                  # ← you are here
 ```
@@ -88,7 +87,7 @@ ai_tax_advisor/
 - **Node.js ≥ 20** (tested with v24) — recommended via `[nvm](https://github.com/nvm-sh/nvm)`
 - **npm ≥ 10** (bundled with Node.js)
 - **Python ≥ 3.13** — recommended via `[pyenv](https://github.com/pyenv/pyenv)`
-- `**uv`** — `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- **uv** — `curl -LsSf https://astral.sh/uv/install.sh | sh`
 - **Docker Engine + Docker Compose** — required for containerized local run
 
 Verify your setup:
@@ -194,7 +193,7 @@ docker compose up --build
 
 ## CI/CD Pipeline (GitHub Actions)
 
-Continuous Integration is configured in `.github/workflows/ci.yml`.
+Continuous Integration is configured in `.github/workflows/ci.yml`. The deploy job is currently a placeholder and does not perform a production deployment.
 
 ### When it runs
 
@@ -236,7 +235,7 @@ Continuous Integration is configured in `.github/workflows/ci.yml`.
 - Code pushed or PR opened to `main`
 - Frontend and backend quality checks run
 - If checks pass, Docker images are built
-- If Docker build passes and event is `push` on `main`, deploy job is triggered
+- If Docker build passes and event is `push` on `main`, a deploy placeholder job is triggered
 
 You can inspect run history and logs in the repository's **Actions** tab on GitHub.
 

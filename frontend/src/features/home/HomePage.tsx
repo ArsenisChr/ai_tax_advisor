@@ -17,7 +17,7 @@ const features = [
   {
     title: 'Step 3: Get your AI tax insights',
     description:
-      'Navigate to the AI insights page and understand the reasoning behind every suggestion.',
+      'Review the generated guidance below your submitted form and understand the reasoning behind every suggestion.',
     icon: '💡',
   },
 ] as const
@@ -34,8 +34,8 @@ export function HomePage() {
             explained simply.
           </h1>
           <p className={styles.subtitle}>
-            Share a few details about your income and expenses, and let our AI
-            assistant walk you through practical, personalized tax guidance.
+            Share a few details about your income and expenses, and get tax
+            guidance with concise explanations.
           </p>
           <div className={styles.ctaGroup}>
             <Link to="/tax-form" className={styles.ctaPrimary}>
@@ -61,19 +61,20 @@ export function HomePage() {
         <div className={styles.aboutContent}>
           <p className={styles.aboutLead}>
             AI Tax Advisor is a full-stack web application that turns a few
-            plain financial details into clear, personalized tax guidance.
+            financial details into clear tax guidance.
           </p>
           <p className={styles.aboutText}>
             You fill in a short form with your annual income, deductible
             expenses, filing status, and number of dependents. The app sends
-            that information to an AI model that has been prompted to reason
-            about common tax scenarios, and it returns practical suggestions
-            written in everyday language — no jargon, no spreadsheets.
+            that information to an AI model and returns practical suggestions
+            in everyday language.
           </p>
           <p className={styles.aboutText}>
-            Nothing is saved to your device or shared with third parties
-            beyond what&apos;s needed to generate the advice. The goal is to
-            demystify the process, not to replace a certified accountant.
+            Your latest form submission and response are stored in
+            sessionStorage for the current browser tab (cleared when the tab
+            closes). Data is only sent to backend services required to generate
+            the advice. The goal is to support understanding, not replace a
+            certified accountant.
           </p>
         </div>
       </section>
