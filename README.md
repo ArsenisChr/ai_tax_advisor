@@ -12,9 +12,14 @@ the model text in `message`. The **React** client renders that text as
 the browser; configure the backend with `APP_OPENAI_API_KEY` (and optional
 `APP_OPENAI_MODEL`). See `backend/.env.example`.
 
+## Presentation
+
+Application presentation (PDF): [![AI Tax Advisor Presentation](assets/preview.png)](assets/AI-Tax-Advisor.pdf)
+
 ## Tech Stack
 
 **Frontend**
+
 - React 19 + TypeScript — UI + static types
 - Vite — build tool & dev server
 - React Router v7 — SPA routing
@@ -23,6 +28,7 @@ the browser; configure the backend with `APP_OPENAI_API_KEY` (and optional
 - CSS Modules — scoped styles, dark mode, responsive
 
 **Backend**
+
 - FastAPI — REST API
 - Pydantic v2 — request/response schemas + validation
 - OpenAI Python SDK — `POST` flow calls the model from `app/integrations/`
@@ -30,6 +36,7 @@ the browser; configure the backend with `APP_OPENAI_API_KEY` (and optional
 - Pytest — API tests
 
 **Tooling & Infrastructure**
+
 - `npm` (frontend) · `uv` (backend) — fast, modern package managers
 
 ---
@@ -78,10 +85,10 @@ ai_tax_advisor/
 
 ## Prerequisites
 
-- **Node.js ≥ 20** (tested with v24) — recommended via [`nvm`](https://github.com/nvm-sh/nvm)
+- **Node.js ≥ 20** (tested with v24) — recommended via `[nvm](https://github.com/nvm-sh/nvm)`
 - **npm ≥ 10** (bundled with Node.js)
-- **Python ≥ 3.13** — recommended via [`pyenv`](https://github.com/pyenv/pyenv)
-- **`uv`** — `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- **Python ≥ 3.13** — recommended via `[pyenv](https://github.com/pyenv/pyenv)`
+- `**uv`** — `curl -LsSf https://astral.sh/uv/install.sh | sh`
 - **Docker Engine + Docker Compose** — required for containerized local run
 
 Verify your setup:
@@ -100,15 +107,17 @@ docker compose version
 ## Getting Started
 
 ### Frontend
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-The app will be available at **http://localhost:5173**.
+The app will be available at **[http://localhost:5173](http://localhost:5173)**.
 
 ### Backend
+
 ```bash
 cd backend
 cp .env.example .env   # set APP_OPENAI_API_KEY (and model if you like)
@@ -116,7 +125,7 @@ uv sync --all-groups
 uv run fastapi dev app/main.py
 ```
 
-API docs (Swagger): **http://localhost:8000/docs**
+API docs (Swagger): **[http://localhost:8000/docs](http://localhost:8000/docs)**
 
 Without a valid OpenAI key, tax advice calls will return **502** from `/api/tax/advice` because the app calls the real API.
 
@@ -125,11 +134,13 @@ Without a valid OpenAI key, tax advice calls will return **502** from `/api/tax/
 ## Run with Docker
 
 The repository includes Docker setup for both services:
+
 - `backend/Dockerfile` (FastAPI on port `8000`)
 - `frontend/Dockerfile` (Vite dev server on port `5173`)
 - `docker-compose.yml` (orchestrates frontend + backend)
 
 ### 1) Prepare backend env file
+
 `docker-compose.yml` loads backend environment variables from `backend/.env`.
 
 ```bash
@@ -139,6 +150,7 @@ cd ..
 ```
 
 ### 2) Build images
+
 From the repository root:
 
 ```bash
@@ -158,9 +170,10 @@ docker compose up -d
 ```
 
 Services:
-- Frontend: **http://localhost:5173**
-- Backend API: **http://localhost:8000**
-- Swagger docs: **http://localhost:8000/docs**
+
+- Frontend: **[http://localhost:5173](http://localhost:5173)**
+- Backend API: **[http://localhost:8000](http://localhost:8000)**
+- Swagger docs: **[http://localhost:8000/docs](http://localhost:8000/docs)**
 
 ### Useful Docker commands
 
@@ -184,43 +197,42 @@ docker compose up --build
 Continuous Integration is configured in `.github/workflows/ci.yml`.
 
 ### When it runs
+
 - On every `push` to `main`
 - On every `pull_request` targeting `main`
 
 ### Pipeline jobs
 
 1. `frontend`
-   - Runs in `frontend/`
-   - Uses Node.js `24`
-   - Executes:
-     - `npm ci`
-     - `npm run lint`
-     - `npm run build`
-
+  - Runs in `frontend/`
+  - Uses Node.js `24`
+  - Executes:
+    - `npm ci`
+    - `npm run lint`
+    - `npm run build`
 2. `backend`
-   - Runs in `backend/`
-   - Uses Python `3.13` + `uv`
-   - Sets CI env values:
-     - `APP_OPENAI_API_KEY=test-key`
-     - `APP_APP_ENV=test`
-   - `APP_OPENAI_API_KEY` is a dummy CI value used to satisfy settings validation during tests
-   - Executes:
-     - `uv sync --all-groups`
-     - `uv run ruff check .`
-     - `uv run mypy app tests`
-     - `uv run pytest -v`
-
+  - Runs in `backend/`
+  - Uses Python `3.13` + `uv`
+  - Sets CI env values:
+    - `APP_OPENAI_API_KEY=test-key`
+    - `APP_APP_ENV=test`
+  - `APP_OPENAI_API_KEY` is a dummy CI value used to satisfy settings validation during tests
+  - Executes:
+    - `uv sync --all-groups`
+    - `uv run ruff check .`
+    - `uv run mypy app tests`
+    - `uv run pytest -v`
 3. `docker`
-   - Runs only if `frontend` and `backend` jobs pass
-   - Validates container builds with:
-     - `docker compose build`
-
+  - Runs only if `frontend` and `backend` jobs pass
+  - Validates container builds with:
+    - `docker compose build`
 4. `deploy`
-   - Runs only if `docker` passes
-   - Runs only for `push` events on `main`
-   - Currently a placeholder step (`echo ...`) until a production target is configured
+  - Runs only if `docker` passes
+  - Runs only for `push` events on `main`
+  - Currently a placeholder step (`echo ...`) until a production target is configured
 
 ### CI flow summary
+
 - Code pushed or PR opened to `main`
 - Frontend and backend quality checks run
 - If checks pass, Docker images are built
@@ -234,21 +246,25 @@ You can inspect run history and logs in the repository's **Actions** tab on GitH
 
 ### Frontend (`cd frontend`)
 
-| Command           | Description                                                |
-| ----------------- | ---------------------------------------------------------- |
-| `npm run dev`     | Dev server with hot-module reloading                       |
-| `npm run build`   | Type-check (`tsc -b`) + optimized production build (Vite)  |
-| `npm run preview` | Preview the production build locally                       |
-| `npm run lint`    | Run ESLint across the codebase                             |
+
+| Command           | Description                                               |
+| ----------------- | --------------------------------------------------------- |
+| `npm run dev`     | Dev server with hot-module reloading                      |
+| `npm run build`   | Type-check (`tsc -b`) + optimized production build (Vite) |
+| `npm run preview` | Preview the production build locally                      |
+| `npm run lint`    | Run ESLint across the codebase                            |
+
 
 ### Backend (`cd backend`)
 
-| Command                     | Description                              |
-| --------------------------- | ---------------------------------------- |
-| `uv run fastapi dev app/main.py` | Start FastAPI dev server           |
-| `uv run pytest -v`          | Run test suite                           |
-| `uv run ruff check .`       | Run lint checks                          |
-| `uv run mypy app tests`     | Run static type checks                   |
+
+| Command                          | Description              |
+| -------------------------------- | ------------------------ |
+| `uv run fastapi dev app/main.py` | Start FastAPI dev server |
+| `uv run pytest -v`               | Run test suite           |
+| `uv run ruff check .`            | Run lint checks          |
+| `uv run mypy app tests`          | Run static type checks   |
+
 
 ---
 
@@ -257,23 +273,28 @@ You can inspect run history and logs in the repository's **Actions** tab on GitH
 Base URL (local): `http://localhost:8000`
 
 ### Health
+
 - `GET /health` → liveness probe
 - `GET /ready` → readiness probe
 
 Example responses:
+
 ```json
 { "status": "ok" }
 ```
+
 ```json
 { "status": "ready" }
 ```
 
 ### Tax Advice
+
 - `POST /api/tax/advice`
 - Accepts camelCase payload from the frontend, validates, then calls OpenAI; 
 - Returns the model’s guidance in `message` (or 502 if the AI call fails)
 
 Request body:
+
 ```json
 {
   "fullName": "Maria Papadopoulou",
@@ -289,6 +310,7 @@ Request body:
 ```
 
 Response body (shape; `message` is natural-language Markdown from the model):
+
 ```json
 {
   "status": "received",
@@ -298,6 +320,7 @@ Response body (shape; `message` is natural-language Markdown from the model):
 ```
 
 Notes:
+
 - Backend fields are snake_case internally and exposed as camelCase via Pydantic aliases.
 - Empty/whitespace `notes` values are normalized to `null`.
 
@@ -337,3 +360,4 @@ This project is currently for educational/demonstration purposes.
 > **Disclaimer:** AI Tax Advisor is a demonstration project and is not a
 > substitute for professional tax advice. Always consult a certified
 > accountant or tax professional for financial decisions.
+
