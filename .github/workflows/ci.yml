@@ -12,6 +12,9 @@ jobs:
     defaults:
       run:
         working-directory: frontend
+    env:
+      APP_OPENAI_API_KEY: test-key
+      APP_APP_ENV: test
     steps:
       - uses: actions/checkout@v4
 
